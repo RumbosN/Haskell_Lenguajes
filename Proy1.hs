@@ -1,11 +1,19 @@
+{-# LANGUAGE FlexibleInstances #-}
 
---Definicion del tipo de dato Term
-
+-- ##############################################################
+-- #############  Definicion del tipo de dato Term  #############
+-- ##############################################################
 data Term =  Verdadero | Falso | Var Char | Or Term Term 
             | And Term Term | Implica Term Term | Neg Term 
             | Equiv Term Term | NegEquiv Term Term  
+-- ##############################################################
 
---Definicion de Variables y Constantes
+
+
+
+-- ##############################################################
+-- ###########  Definicion de Variables y Constantes  ###########
+-- ##############################################################
 true :: Term
 true = Verdadero
 
@@ -89,8 +97,14 @@ y = Var 'y'
 
 z :: Term
 z = Var 'z'
+-- ##############################################################
 
--- Deficion de operadores
+
+
+
+-- ##############################################################
+-- ##################  Definicion operadores  ###################
+-- ##############################################################
 infixl 4 \/  
 (\/) :: Term -> Term -> Term
 (\/) t1 t2 = Or t1 t2
@@ -114,15 +128,27 @@ infixl 2 <==>
 infixl 2 !<==>
 (!<==>) :: Term -> Term -> Term
 (!<==>) t1 t2 = NegEquiv t1 t2
+-- ##############################################################
 
--- Definicion tipo ecuacion y del operador igualdad
+
+
+
+-- ##############################################################
+-- #####  Definicion tipo ecuacion y del operador igualdad  #####
+-- ##############################################################
 data Equation = Equal Term Term
 
 infixl 1 ===
 (===) :: Term -> Term -> Equation
 (===) t1 t2 =  Equal t1 t2
+-- ##############################################################
 
--- Para poder imprimir los terminos
+
+
+
+-- ##############################################################
+-- ######  Para poder imprimir los terminos y la Ecuacion  ######
+-- ##############################################################
 instance Show Term where
     show (Var a) =  [a]
     show (Verdadero) = "true"
@@ -134,31 +160,71 @@ instance Show Term where
     show (Equiv a b) = "(" ++ show a ++ " <==> " ++ show b ++ ")"
     show (NegEquiv a b) = "(" ++ show a ++ " !<==> " ++ show b ++ ")"
 
--- Definicion tipo de dato Sust
-class Sust t
-    casoBase :: Char -> t -> Term
+instance Show Equation where
+    show (Equal a b) = show a ++ "==" ++ show b
+-- ##############################################################
 
+
+
+
+-- ##############################################################
+-- ###############  Definicion tipo de dato Sust  ###############
+-- ##############################################################
 type Sust1 = (Term, Term)
 type DobSust = (Term, Sust1, Term)
 type TripSust = (Term, Term, Sust1, Term, Term)
 
-instance Sust Sust1 where
-	casoBase a t = ()
-
-instance Sust DobSust where
-	casoBase a t = ()
-
-instance Sust Sust1 where
-	casoBase a t = ()
-
+class Sust t where
+    casoBase :: Char -> t -> Term
+    
 infixl 1 =:
 (=:) :: Term -> Term -> Sust1
 (=:) t1 t2 = (t1, t2)
+-- ##############################################################
 
-sustitucion :: Term -> Sust t-> Term
+
+
+
+-- ##############################################################
+-- ##################  Funcion Sustitucion  #####################
+-- ##############################################################
+instance Sust Sust1 where
+	casoBase a (t1 , (Var p)) = if a == p then t1 else (Var a)
+    -- Que vasa cuando el segundo termino da la tupla no es un Var?
+
+instance Sust DobSust where
+	casoBase a (t1, (t2, (Var p)), (Var q))
+	    | a == p = t2
+	    | a == q = t1
+	    | otherwise = (Var a)
+    -- que pasa cuando p es igual a q. Debe dar error?
+
+instance Sust TripSust where
+	casoBase a (t1, t2, (t3, (Var p)), (Var q), (Var r))
+	    | a == p = t3
+	    | a == q = t2
+	    | a == r = t1
+	    | otherwise = (Var a)
+	    
+sustitucion :: (Sust t) => Term -> t-> Term
+sustitucion (Verdadero) _ = Verdadero
+sustitucion (Falso) _ = Falso
+sustitucion (Or t1 t2) s = Or (sustitucion t1 s) (sustitucion t2 s)
+sustitucion (And t1 t2) s = And (sustitucion t1 s) (sustitucion t2 s)
+sustitucion (Implica t1 t2) s = Implica (sustitucion t1 s) (sustitucion t2 s)
+sustitucion (Neg t) s = Neg (sustitucion t s)
+sustitucion (Equiv t1 t2) s = Equiv (sustitucion t1 s) (sustitucion t2 s)
+sustitucion (NegEquiv t1 t2) s = NegEquiv (sustitucion t1 s) (sustitucion t2 s)
 sustitucion (Var a) s = casoBase a s
+-- ##############################################################
 
-intantiate :: Equation -> Sust -> Equation
+
+
+
+-- ##############################################################
+-- #######  Funcion Instanciacion, Leibniz, Infer y Step  #######
+-- ##############################################################
+intantiate :: (Sust t) => Equation -> t -> Equation
 intantiate (Equal t1 t2) s = Equal (sustitucion t1 s) (sustitucion t2 s)
 
 leibniz :: Equation -> Term -> Char -> Equation
@@ -167,6 +233,15 @@ leibniz (Equal t1 t2) tE z = Equal (sustitucion tE s1) (sustitucion tE s2)
         s1 = (t1,Var z)
         s2 = (t2,Var z)
 
-infer :: Float -> Sust -> Char -> Term -> Equation
+infer :: (Sust t) => Float -> t -> Char -> Term -> Equation
 infer n s z tE = leibniz (intantiate (prop n) s) tE z
+-- ##############################################################
 
+
+prop :: Float -> Equation 
+prop num
+  | num == 3.1  = (p <==> q) <==> r === p <==> (q <==> r)
+  | num == 3.2  = (p <==> q) === (q <==> p)
+  | num == 3.3  = p <==> p === true
+  | num == 3.4  = p === p <==> true
+  | otherwise = error "The statement doesn't exists"
