@@ -46,7 +46,9 @@ instance Show DobSust where
                                show t3 ++ "," ++ show t4 ++ ")"
     
 instance Show TripSust where
-    show (t1, t2, (t3, t4), t5, t6) =  "(" ++ show t1 ++ "," ++ show t2 ++ "," ++ show t3 ++ " =: " ++ show t4 ++ "," ++ show t5 ++ "," ++ show t6 ++ ")"
+    show (t1, t2, (t3, t4), t5, t6) =  "(" ++ show t1 ++ "," ++ show t2 ++ "," ++ 
+                                       show t3 ++ " =: " ++ show t4 ++ "," ++ show t5 ++
+                                       "," ++ show t6 ++ ")"
 -- ##############################################################
 
 
@@ -118,14 +120,19 @@ step t1 n s z tE
 -- ##############################################################
 -- #####################  Funciones IO  ######################
 -- ##############################################################
-statement :: (Sust t, Show t) => Float -> Ignore -> t -> Ignore -> Ignore -> Term -> Term -> Term -> IO Term
-statement n _ s _ _ (Var z) tE t0 = return("=== <statement " ++ show n ++ " with " ++ show s ++ " using lambda " ++ [z] ++ " (" ++ show tE ++ ")>\n")
-                                      >>= \str1 -> (return (step t0 n s z tE) >>= \term1 -> (putStrLn(str1 ++ show(term1)) >>= \ignore -> (return term1)))
+statement :: (Sust t, Show t) => Float -> Ignore -> t -> Ignore -> 
+                                 Ignore -> Term -> Term -> Term -> IO Term
+statement n _ s _ _ (Var z) tE t0 = return("=== <statement " ++ show n ++ " with " ++ 
+                                           show s ++ " using lambda " ++ [z] ++ " (" ++ 
+                                           show tE ++ ")>\n")
+                                    >>= \str1 -> (return (step t0 n s z tE) 
+                                    >>= \term1 -> (putStrLn(str1 ++ show(term1)) 
+                                    >>= \ignore -> (return term1)))
                                                
 proof :: Equation -> IO Term
-proof teorema@(Equal t1 t2) = return("prooving "++ show teorema ++ "\n\n" ++ show t1) >>= \str1 -> (putStrLn str1 >>= \ignore -> (return t1))
+proof teorema@(Equal t1 t2) = return("prooving "++ show teorema ++ "\n\n" ++ show t1) 
+                              >>= \str1 -> (putStrLn str1 >>= \ignore -> (return t1))
 
---Esta funcion debe imprimir un mensaje de exito o fracaso
 done :: Equation -> Term -> IO ()
 done (Equal t1 t2) t3
     | t2 == t3 = return("\nproof successful") >>= \str -> (putStrLn str)

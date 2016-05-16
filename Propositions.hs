@@ -1,5 +1,5 @@
 module Propositions where
-	
+
 import Terms
 
 prop :: Float -> Equation 
