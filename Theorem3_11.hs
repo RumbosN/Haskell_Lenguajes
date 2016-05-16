@@ -1,4 +1,5 @@
-import Proyecto
+import Functions
+import Terms
 
 verify = let theorem = (p <==> q) <==> (q <==> p) === true in
          proof theorem

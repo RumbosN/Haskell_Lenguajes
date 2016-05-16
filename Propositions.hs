@@ -1,5 +1,6 @@
 module Propositions where
-import Proyecto
+	
+import Terms
 
 prop :: Float -> Equation 
 prop num
