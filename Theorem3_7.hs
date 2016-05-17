@@ -1,17 +1,13 @@
 import Functions
 import Terms
 
-verify = let theorem = p === (q <==> q) <==> p in
+verify = let theorem = (p <==> p) <==> (q <==> q) === true in
          proof theorem
          >>=
-         statement 3.5 with (p =: p) using lambda z (z)
+         statement 3.3 with (p =: p) using lambda z (z <==> (q <==> q))
          >>=
-         statement 3.2 with (p =: p) using lambda z (z <==> q)
+         statement 3.3 with (q =: p) using lambda z (true <==> z)
          >>=
-         statement 3.1 with (q, p, q =: p, q, r) using lambda z (z)
-         >>=
-         statement 3.2 with (p =: p) using lambda z (q <==> z)
-         >>=
-         statement 3.1 with (q, p =: p, r) using lambda z (z)
+         statement 3.3 with (true =: p) using lambda z (z)
          >>=
          done theorem

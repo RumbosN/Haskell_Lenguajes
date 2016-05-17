@@ -1,11 +1,21 @@
-import Functions
 import Terms
+import Functions
 
-verify = let theorem = (p <==> q) <==> (q <==> p) === true in
+verify = let theorem = ( neg p === q <==> (p <==> neg q) ) in
          proof theorem
          >>=
-         statement 3.2 with (p =: p) using lambda z ((p <==> q) <==> z)
+         statement 3.5 with (neg p =: p) using lambda z (z)
          >>=
-         statement 3.3 with (p <==> q =: p) using lambda z (z)
+         statement 3.2 with (neg p =: p) using lambda z (z <==> q)
+         >>=
+         statement 3.1 with (q, neg p,q =: p, q, r) using lambda z (z)
+         >>=
+         statement 3.9 with (p =: p) using lambda z (q <==> z)
+         >>=
+         statement 3.2 with (p =: p) using lambda z (q <==> neg z)
+         >>=
+         statement 3.9 with (q, p =: p, q) using lambda z (q <==> z)
+         >>=
+         statement 3.2 with (neg q =: q) using lambda z (q <==> z)
          >>=
          done theorem

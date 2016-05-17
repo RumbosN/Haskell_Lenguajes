@@ -3,7 +3,7 @@
 module Functions where
 
 import Terms
-import Propositions
+import Theorems
 
 -- ##############################################################
 -- ################  Definicion varibles dummy  #################
