@@ -1,4 +1,5 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances #-}
+-- {-# LANGUAGE FlexibleInstances, OverlappingInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Functions where
 
@@ -37,15 +38,17 @@ infixl 1 =:
 (=:) :: Term -> Term -> Sust1
 (=:) t1 t2 = (t1, t2)
 
+myShow :: a -> String
+myShow a = show a
 
-instance Show Sust1 where
+instance {-# OVERLAPPING  #-} Show Sust1 where
     show (t1, t2) =  "(" ++ show t1 ++ " =: " ++ show t2 ++ ")"
     
-instance Show DobSust where
+instance {-# OVERLAPPING  #-} Show DobSust where
     show (t1, (t2,t3), t4) =  "(" ++ show t1 ++ "," ++ show t2 ++" =: " ++ 
                                show t3 ++ "," ++ show t4 ++ ")"
     
-instance Show TripSust where
+instance {-# OVERLAPPING  #-} Show TripSust where
     show (t1, t2, (t3, t4), t5, t6) =  "(" ++ show t1 ++ "," ++ show t2 ++ "," ++ 
                                        show t3 ++ " =: " ++ show t4 ++ "," ++ show t5 ++
                                        "," ++ show t6 ++ ")"
