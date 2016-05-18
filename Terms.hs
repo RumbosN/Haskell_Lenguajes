@@ -164,6 +164,8 @@ instance Show Term where
     show (Or Falso Falso) = "false" ++ " \\/ " ++ "false"
     show (Or Verdadero Falso) = "true" ++ " \\/ " ++ "false"
     show (Or Falso Verdadero) = "false" ++ " \\/ " ++ "true"
+    show (Or (Neg t1) t2) = show (Neg t1) ++ " \\/ " ++ show t2
+    show (Or t1 (Neg t2)) = show t1 ++ " \\/ " ++ show (Neg t2)
     show (Or t Verdadero) = show t ++ " \\/ " ++ "true"
     show (Or t Falso) = show t ++ " \\/ " ++ "false"
     show (Or Verdadero t) = "true" ++ " \\/ " ++ show t
@@ -182,12 +184,14 @@ instance Show Term where
     show (And Falso Falso) = "false" ++ " /\\ " ++ "false"
     show (And Verdadero Falso) = "true" ++ " /\\ " ++ "false"
     show (And Falso Verdadero) = "false" ++ " /\\ " ++ "true"
+    show (And (Neg t1) t2) = show (Neg t1) ++ " /\\ " ++ show t2
+    show (And t1 (Neg t2)) = show t1 ++ " /\\ " ++ show (Neg t2)    
     show (And t Verdadero) = show t ++ " /\\ " ++ "true"
     show (And t Falso) = show t ++ " /\\ " ++ "false"
     show (And Verdadero t) = "true" ++ " /\\ " ++ show t
     show (And Falso t) = "false" ++ " /\\ " ++ show t
     show (And (Var a) t) = [a] ++ " /\\ (" ++ show t ++ ")"
-    show (And t (Var b)) = "(" ++ show t ++ ") \\/ " ++ [b]
+    show (And t (Var b)) = "(" ++ show t ++ ") /\\ " ++ [b]
     show (And t1 t2) = "(" ++ show t1 ++ ") /\\ (" ++ show t2 ++ ")"
     
     -- El mostrar bien parentizado el Implica
@@ -200,6 +204,8 @@ instance Show Term where
     show (Implica Falso Falso) = "false" ++ " ==> " ++ "false"
     show (Implica Verdadero Falso) = "true" ++ " ==> " ++ "false"
     show (Implica Falso Verdadero) = "false" ++ " ==> " ++ "true"
+    show (Implica (Neg t1) t2) = show (Neg t1) ++ " ==> " ++ show t2
+    show (Implica t1 (Neg t2)) = show t1 ++ " ==> " ++ show (Neg t2)
     show (Implica t Verdadero) = show t ++ " ==> " ++ "true"
     show (Implica t Falso) = show t ++ " ==> " ++ "false"
     show (Implica Verdadero t) = "true" ++ " ==> " ++ show t
@@ -208,8 +214,12 @@ instance Show Term where
     show (Implica t (Var b)) = "(" ++ show t ++ ") ==> " ++ [b]
     show (Implica t1 t2) = "(" ++ show t1 ++ ") ==> (" ++ show t2 ++ ")"
     
-    show (Neg a) = "~" ++ show a
-    
+    -- El mostrar bien parentizado la negacion
+    show (Neg (Var z)) = "~" ++ [z]
+    show (Neg Verdadero) = "~" ++ "true"
+    show (Neg Falso) = "~" ++ "false"
+    show (Neg t) = "~(" ++ show t ++ ")"  
+
     -- El mostrar bien parentizado el Equiv
     show (Equiv (Var a) (Var b)) = [a] ++ " <==> " ++ [b]
     show (Equiv (Var a) Verdadero) = [a] ++ " <==> " ++ "true"
@@ -220,6 +230,8 @@ instance Show Term where
     show (Equiv Falso Falso) = "false" ++ " <==> " ++ "false"
     show (Equiv Verdadero Falso) = "true" ++ " <==> " ++ "false"
     show (Equiv Falso Verdadero) = "false" ++ " <==> " ++ "true"
+    show (Equiv (Neg t1) t2) = show (Neg t1) ++ " <==> " ++ show t2
+    show (Equiv t1 (Neg t2)) = show t1 ++ " <==> " ++ show (Neg t2)    
     show (Equiv t Verdadero) = show t ++ " <==> " ++ "true"
     show (Equiv t Falso) = show t ++ " <==> " ++ "false"
     show (Equiv Verdadero t) = "true" ++ " <==> " ++ show t
@@ -238,6 +250,8 @@ instance Show Term where
     show (NegEquiv Falso Falso) = "false" ++ " !<==> " ++ "false"
     show (NegEquiv Verdadero Falso) = "true" ++ " !<==> " ++ "false"
     show (NegEquiv Falso Verdadero) = "false" ++ " !<==> " ++ "true"
+    show (NegEquiv (Neg t1) t2) = show (Neg t1) ++ " !<==> " ++ show t2
+    show (NegEquiv t1 (Neg t2)) = show t1 ++ " !<==> " ++ show (Neg t2)    
     show (NegEquiv t Verdadero) = show t ++ " !<==> " ++ "true"
     show (NegEquiv t Falso) = show t ++ " !<==> " ++ "false"
     show (NegEquiv Verdadero t) = "true" ++ " !<==> " ++ show t
