@@ -1,0 +1,23 @@
+3.6 falla en (q,p =: p,r) deberia ser (p,q =: p,r)                  Hint 5
+
+3.11 falla en (q,p =: p,q) deberia ser (p,q =: p,q)                 Hint 6
+
+3.12 falla en (q,p <==> ~q =: p,q) deberia ser (p <==> ~q,q =: p,q) Hint 2
+
+3.16 falla en (q,p =: p,q) deberia ser (p,q =: p,q)                 Hint 3
+
+3.17 falla en (~p <==> q,r =: p,q) deberia ser (r,~p <==> q =: p,q) Hint 2
+
+3.19 falla en (q,p =: p,q) deberia ser (p,q =: p,q)                 Hint 2
+
+3.20 falla en (q,p =: p,q) deberia ser (p,q =: p,q)                 Hint 3
+
+3.21 falla en (q,~p =: p,q) deberia ser (~p,q =: p,q)               Hint 1
+
+3.22 falla en (~p,p =: p,q) deberia ser (p,~p =: p,q)               Hint 1
+
+3.23 falla en (~p <==> q,r =: p,q) deberia ser (r,~p <==> q =: p,q) Hint 2
+
+3.31 falla en (p,q \/ r =: q,r) deberia ser (q \/ r,p =: q,r)       Hint 2
+
+3.32 falla en (q,p =: p,q) deberia ser (p,q =: p,q)                 Hint 4
