@@ -62,16 +62,16 @@ instance Sust Sust1 where
 
 instance Sust DobSust where
     casoBase a (t1, (t2, (Var p)), (Var q))
-        | a == p = t2
-        | a == q = t1
+        | a == p = t1
+        | a == q = t2
         | otherwise = (Var a)
     -- que pasa cuando p es igual a q. Debe dar error?
 
 instance Sust TripSust where
     casoBase a (t1, t2, (t3, (Var p)), (Var q), (Var r))
-        | a == p = t3
+        | a == p = t1
         | a == q = t2
-        | a == r = t1
+        | a == r = t3
         | otherwise = (Var a)
         
 sustitucion :: (Sust t) => Term -> t-> Term
