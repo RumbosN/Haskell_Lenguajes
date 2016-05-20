@@ -164,6 +164,9 @@ instance Show Term where
     show (Or Falso Falso) = "false" ++ " \\/ " ++ "false"
     show (Or Verdadero Falso) = "true" ++ " \\/ " ++ "false"
     show (Or Falso Verdadero) = "false" ++ " \\/ " ++ "true"
+
+    -------------------------------------------------------
+    --  JOSE ESTO ES LO QUE TIENES QUE AGREGAR EN LAS DEMAS
     -- Negado con var y negado con booleano no llevan parentesis
     show (Or (Neg t1) (Var a)) = show (Neg t1) ++ " \\/ " ++ [a]
     show (Or (Var a) (Neg t2)) = [a] ++ " \\/ " ++ show (Neg t2)
@@ -172,6 +175,9 @@ instance Show Term where
     show (Or (Neg t1) Falso) = show (Neg t1) ++ " \\/ false"
     show (Or Falso (Neg t2)) = "false \\/ " ++ show (Neg t2)
     ------------------
+    -------------------------------------------------------
+
+
     show (Or (Neg t1) t2) = show (Neg t1) ++ " \\/ (" ++ show t2 ++ ")"
     show (Or t1 (Neg t2)) = "(" ++ show t1 ++ ") \\/ " ++ show (Neg t2)
     show (Or t Verdadero) = "(" ++ show t ++ ") \\/ " ++ "true"
